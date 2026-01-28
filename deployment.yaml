@@ -4,10 +4,20 @@ metadata:
   name: ekart
 spec:
   replicas: 2
+  # 1. ADD THIS SELECTOR BLOCK
+  selector:
+    matchLabels:
+      app: ekart-app
   template:
+    metadata:
+      # 2. ADD LABELS THAT MATCH THE SELECTOR ABOVE
+      labels:
+        app: ekart-app
     spec:
       containers:
       - name: ekartapp
         image: sirishak83/ekart-app:latest
+        ports:
+        - containerPort: 8080
       imagePullSecrets:
       - name: dockerhub-secret
