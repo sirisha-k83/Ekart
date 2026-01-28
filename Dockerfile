@@ -1,19 +1,9 @@
-FROM maven:3.9-eclipse-temurin-17 AS build
+FROM openjdk:8-jdk-alpine
 
 WORKDIR /app
 
-COPY pom.xml ./
-COPY src ./src
+# Copy the JAR from your Maven build
+COPY target/*.jar app.jar
 
-RUN mvn package -DskipTests
-
-# Stage 2: Runtime
-FROM eclipse-temurin:17-jre-alpine
-
-WORKDIR /app
-
-COPY --from=build /app/target/*.jar app.jar
-
-EXPOSE 8080
-
-CMD ["java", "-jar", "app.jar"]
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
