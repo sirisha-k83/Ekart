@@ -1,4 +1,5 @@
-FROM openjdk:8-jdk-alpine
+# Replace the deprecated openjdk image with Eclipse Temurin
+FROM eclipse-temurin:8-jdk-alpine
 
 WORKDIR /app
 
