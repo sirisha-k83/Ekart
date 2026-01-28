@@ -67,18 +67,18 @@ pipeline {
     stage('Deploy to AKS') {
        steps {
          script {
-            // Treat 'Username' as Client ID and 'Password' as Client Secret
+        
             withCredentials([
                 usernamePassword(credentialsId: 'AZURE_CRED_ID', usernameVariable: 'AZ_CLIENT_ID', passwordVariable: 'AZ_CLIENT_SECRET'),
                 string(credentialsId: 'AZURE_TENANT_ID', variable: 'AZ_TENANT_ID')
             ]) {
                 sh """
-                    # Log in using the standard variables
+                
                     az login --service-principal -u "${AZ_CLIENT_ID}" -p "${AZ_CLIENT_SECRET}" -t "${AZ_TENANT_ID}"
                     
                     az aks get-credentials --resource-group myAKSResourceGroup --name example-aks-cluster --overwrite-existing
                     
-                    # Deployment commands...
+                    
                     kubectl apply -f deployment.yaml
                     kubectl apply -f deploymentservice.yml
                 """
