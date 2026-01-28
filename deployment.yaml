@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: Ekart
+  name: ekart
 spec:
   replicas: 2
   template:
     spec:
       containers:
-      - name: Ekartapp
+      - name: ekartapp
         image: sirishak83/ekart-app:latest
       imagePullSecrets:
       - name: dockerhub-secret
