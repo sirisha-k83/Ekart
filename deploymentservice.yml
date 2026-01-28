@@ -8,7 +8,7 @@ spec:
   ports:
     - protocol: TCP
       port: 80        # The port you'll use in the browser
-      targetPort: 8080 # The port your Spring Boot app listens on
+      targetPort: 8070 # The port your Spring Boot app listens on
   type: LoadBalancer  # This tells Azure to create a Public IP
 
 
