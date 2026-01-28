@@ -18,6 +18,6 @@ spec:
       - name: ekartapp
         image: sirishak83/ekart-app:latest
         ports:
-        - containerPort: 8080
+        - containerPort: 8070
       imagePullSecrets:
       - name: dockerhub-secret
