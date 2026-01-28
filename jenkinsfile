@@ -1,0 +1,91 @@
+pipeline {
+    agent any
+
+    tools {
+        jdk 'jdk17'
+        maven 'maven3'
+    }
+
+    environment {
+        SCANNER_HOME = tool 'sonar'
+    }
+
+    stages {
+
+        stage('Git checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/sirisha-k83/Ekart.git'
+            }
+        }
+
+        stage('Compile') {
+            steps {
+                sh "mvn compile"
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh "mvn test -DskipTests=true"
+            }
+        }
+
+        stage('Sonarqube Analysis') {
+            steps {
+                withSonarQubeEnv('sonar') {
+                    sh '''
+                        $SCANNER_HOME/bin/sonar-scanner \
+                        -Dsonar.projectKey=Ekart \
+                        -Dsonar.projectName=Ekart \
+                        -Dsonar.java.binaries=.
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy to Nexus') {
+            steps {
+                withMaven(globalMavenSettingsConfig: 'maven', jdk: 'jdk17', maven: 'maven3', traceability: true) {
+                    sh "mvn deploy -DskipTests=true"
+                }
+            }
+        }
+
+        stage('Build & Push Docker Image') {
+            steps {
+                script {
+                    sh "docker build -t sirishak83/ekart-app:latest ."
+
+                    withCredentials([usernamePassword(credentialsId: 'docker-cred', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                        sh "echo $PASS | docker login -u $USER --password-stdin"
+                        sh "docker push sirishak83/ekart-app:latest"
+                    }
+                }
+            }
+        }
+
+    stage('Deploy to AKS') {
+       steps {
+         script {
+            // Treat 'Username' as Client ID and 'Password' as Client Secret
+            withCredentials([
+                usernamePassword(credentialsId: 'AZURE_CRED_ID', usernameVariable: 'AZ_CLIENT_ID', passwordVariable: 'AZ_CLIENT_SECRET'),
+                string(credentialsId: 'AZURE_TENANT_ID', variable: 'AZ_TENANT_ID')
+            ]) {
+                sh """
+                    # Log in using the standard variables
+                    az login --service-principal -u "${AZ_CLIENT_ID}" -p "${AZ_CLIENT_SECRET}" -t "${AZ_TENANT_ID}"
+                    
+                    az aks get-credentials --resource-group myAKSResourceGroup --name example-aks-cluster --overwrite-existing
+                    
+                    # Deployment commands...
+                    kubectl apply -f deployment.yaml
+                    kubectl apply -f deploymentservice.yml
+                """
+            }
+        }
+    }
+}
+
+    } // end stages
+} // end pipeline
