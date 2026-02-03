@@ -5,7 +5,7 @@
 This is a demo project for practicing Spring + Thymeleaf. The idea was to build some basic shopping cart web app.
 
 It was made using **Spring Boot**, **Spring Security**, **Thymeleaf**, **Spring Data JPA**, **Spring Data REST and Docker**. 
-Database is in memory **H2**.
+
 
 There is a login and registration functionality included.
 
@@ -101,14 +101,7 @@ $ java -jar target/shopping-cart-0.0.1-SNAPSHOT.jar
 
 To exit the application, press **ctrl-c**.
 
-### Docker
 
-It is possible to run **shopping-cart** using Docker:
-
-Build Docker image:
-```bash
-$ mvn clean package
-$ docker build -t shopping-cart:dev -f docker/Dockerfile .
 ```
 
 Run Docker container:
@@ -118,14 +111,7 @@ $ docker run --rm -i -p 8070:8070 \
       shopping-cart:dev
 ```
 
-##### Helper script
 
-It is possible to run all of the above with helper script:
-
-```bash
-$ chmod +x scripts/run_docker.sh
-$ scripts/run_docker.sh
-```
 
 ## Docker 
 
@@ -134,9 +120,7 @@ Folder **docker** contains:
 * **docker/shopping-cart/Dockerfile** - Docker build file for executing shopping-cart Docker image. 
 Instructions to build artifacts, copy build artifacts to docker image and then run app on proper port with proper configuration file.
 
-## Util Scripts
 
-* **scripts/run_docker.sh.sh** - util script for running shopping-cart Docker container using **docker/Dockerfile**
 
 ## Tests
 
@@ -146,22 +130,16 @@ Tests can be run by executing following command from the root of the project:
 $ mvn test
 ```
 
-## Helper Tools
+jenkins installed need to install configuration pluggin
+and in that you need to update the snapshots and releases 4 lines settings
 
-### HAL REST Browser
+if the artifact is being pushed to Nexus/jfrog artifactory :
 
-Go to the web browser and visit `http://localhost:8070/`
+you will need to update the pom file with the snapshots and releases URL
 
-You will need to be authenticated to be able to see this page.
+need to mvn compile , test , --DSkipTests=true
 
-### H2 Database web interface
-
-Go to the web browser and visit `http://localhost:8070/h2-console`
-
-In field **JDBC URL** put 
-```
-jdbc:h2:mem:shopping_cart_db
-```
+Owasp 
 
 In `/src/main/resources/application.properties` file it is possible to change both
 web interface url path, as well as the datasource url.
