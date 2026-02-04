@@ -115,6 +115,8 @@ $ docker run --rm -i -p 8070:8070 \
 
 ## Docker 
 
+Legacy App Modernization (The "Java 8" Fix): Successfully diagnosed a critical InaccessibleObjectException caused by running a legacy Spring Boot 1.5.3 app on modern Java. Resolved the issue using Eclipse Temurin 8, restoring application stability.
+
 Folder **docker** contains:
 
 * **docker/shopping-cart/Dockerfile** - Docker build file for executing shopping-cart Docker image. 
